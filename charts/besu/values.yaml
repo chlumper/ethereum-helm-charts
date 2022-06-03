@@ -55,6 +55,8 @@ p2pNodePort:
 p2pLoadBalancerPort:
   # -- Expose P2P TCP port via LoadBalancer service
   enabled: false
+  # -- P2P LoadBalancer service annotations (evaluated as template)
+  annotations: {}
   # -- Port to be used
   port: 30303
   # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. There are two available options: Cluster and Local (default).

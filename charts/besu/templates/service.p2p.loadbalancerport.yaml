@@ -7,6 +7,10 @@ metadata:
     {{- include "besu.labels" $ | nindent 4 }}
     pod: {{ include "besu.fullname" $ }}-0
     type: p2p-lb
+  {{- if .Values.p2pLoadBalancerPort.annotations }}
+  annotations:
+    {{- (tpl (.Values.p2pLoadBalancerPort.annotations | toYaml) $)  | nindent 4 }}
+  {{- end }}
 spec:
   type: LoadBalancer
   externalTrafficPolicy: {{ .Values.p2pLoadBalancerPort.externalTrafficPolicy }}
