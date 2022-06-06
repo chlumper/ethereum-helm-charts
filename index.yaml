@@ -25,6 +25,24 @@ entries:
     version: 0.1.0
   besu:
   - apiVersion: v2
+    created: "2022-06-06T19:13:04.342482173Z"
+    description: 'An Ethereum execution layer client designed to be enterprise-friendly
+      for both public and private, permissioned network use cases. Besu is written
+      in Java and released under the Apache 2.0 Licence. '
+    digest: b1cf0d8cee00a6ac07f3914029807910cd29e95227c2e0db5cb0d28ce7ea67f2
+    home: https://www.hyperledger.org/use/besu
+    icon: https://launchpad.ethereum.org/static/media/hyperledger-besu-circle.b96368c7.png
+    maintainers:
+    - email: rafael@skyle.net
+      name: skylenet
+    name: besu
+    sources:
+    - https://github.com/hyperledger/besu
+    type: application
+    urls:
+    - https://github.com/chlumper/ethereum-helm-charts/releases/download/besu-0.3.4/besu-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
     created: "2022-06-06T19:00:25.460149672Z"
     description: 'An Ethereum execution layer client designed to be enterprise-friendly
       for both public and private, permissioned network use cases. Besu is written
@@ -736,4 +754,4 @@ entries:
     urls:
     - https://github.com/skylenet/ethereum-helm-charts/releases/download/testnet-homepage-0.1.0/testnet-homepage-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-06T19:00:25.460311283Z"
+generated: "2022-06-06T19:13:04.342571873Z"
