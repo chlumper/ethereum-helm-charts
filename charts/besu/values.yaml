@@ -63,7 +63,7 @@ p2pLoadBalancerPort:
   # Cluster obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.
   # Local preserves the client source IP and avoids a second hop for LoadBalancer and NodePort type Services, but risks potentially imbalanced traffic spreading.
   # ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
-  # @default -- Local   
+  # @default -- Local
   externalTrafficPolicy: Local
   initContainer:
     image:
@@ -227,16 +227,16 @@ initContainers: []
 # -- Additional containers
 extraContainers: []
 
-# -- Additional volumes (evaluated as template) 
+# -- Additional volumes (evaluated as template)
 extraVolumes: []
 
-# -- Additional volume mounts (evaluated as template) 
+# -- Additional volume mounts (evaluated as template)
 extraVolumeMounts: []
 
 # -- Additional ports. Useful when using extraContainers
 extraPorts: []
 
-# -- Additional env variables (evaluated as template) 
+# -- Additional env variables (evaluated as template)
 extraEnv: []
 #- name: JAVA_OPTS
 #  value: "-Xmx6000m -Xms6000m"
