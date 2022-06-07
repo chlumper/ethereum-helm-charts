@@ -1,7 +1,7 @@
 
 # besu
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 An Ethereum execution layer client designed to be enterprise-friendly for both public and private, permissioned network use cases. Besu is written in Java and released under the Apache 2.0 Licence.
 
@@ -44,12 +44,13 @@ An Ethereum execution layer client designed to be enterprise-friendly for both p
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node selector for pods |
 | p2pLoadBalancerPort.annotations | object | `{}` | P2P LoadBalancer service annotations (evaluated as template) |
-| p2pLoadBalancerPort.enabled | bool | `false` | Expose P2P TCP port via LoadBalancer service |
+| p2pLoadBalancerPort.enabled | bool | `false` | Expose P2P ports via LoadBalancer service |
 | p2pLoadBalancerPort.externalTrafficPolicy | string | Local | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. There are two available options: Cluster and Local (default). Cluster obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading. Local preserves the client source IP and avoids a second hop for LoadBalancer and NodePort type Services, but risks potentially imbalanced traffic spreading. ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip |
 | p2pLoadBalancerPort.initContainer.image.pullPolicy | string | `"IfNotPresent"` | Container pull policy |
 | p2pLoadBalancerPort.initContainer.image.repository | string | `"lachlanevenson/k8s-kubectl"` | Container image to fetch loadbalancer service information |
 | p2pLoadBalancerPort.initContainer.image.tag | string | `"v1.21.3"` | Container tag |
-| p2pLoadBalancerPort.port | int | `30303` | Port to be used |
+| p2pLoadBalancerPort.tcpPort | int | `30303` | P2P TCP wire protocol port (if empty TCP port won't be exposed) |
+| p2pLoadBalancerPort.udpPort | int | `30301` | P2P UDP discovery port (if empty UDP port won't be exposed) |
 | p2pNodePort.enabled | bool | `false` | Expose P2P port via NodePort |
 | p2pNodePort.initContainer.image.pullPolicy | string | `"IfNotPresent"` | Container pull policy |
 | p2pNodePort.initContainer.image.repository | string | `"lachlanevenson/k8s-kubectl"` | Container image to fetch nodeport information |
@@ -121,15 +122,17 @@ p2pNodePort:
   port: 31000
 ```
 
-## Exposing the P2P service (TCP only) via LoadBalancer
+## Exposing the P2P service via LoadBalancer
 
 This will make your node accessible via the Internet using a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
 When using `p2pLoadBalancerPort.enabled` the exposed IP address on your ENR record will be the "public IP" of the LoadBalancer service.
 
-**Limitations:** Limitation: We can not expose the same port with different protocols. We currently do NOT expose the UDP port required for parts of besu peer discovery.
+**Limitations:** Kubernetes currently doesn't support [mixed protocols (TCP and UDP) on the same port at service type LoadBalancer)(https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types) yet,
+ accordingly we use a different port for UDP (discovery protocol) which needs to be specified at enode urls with `discport` parameter ([see](https://besu.hyperledger.org/en/stable/Concepts/Node-Keys/#enode-url)).
 
 ```yaml
 p2pLoadBalancerPort:
   enabled: true
-  port: 30303
+  tcpPort: 30303
+  udpPort: 30301
 ```
