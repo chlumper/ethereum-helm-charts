@@ -48,17 +48,21 @@ p2pNodePort:
       # -- Container pull policy
       pullPolicy: IfNotPresent
 
-# When p2pLoadBalancerPort is enabled, your P2P TCP port will be exposed via service type LoadBalancer.
+# When p2pLoadBalancerPort is enabled, your P2P ports will be exposed via service type LoadBalancer.
 # This is useful if you want to expose and announce your besu peer to the Internet using the LoadBalancer IP.
-# Limitation: We can not expose the same port with different protocols. We currently do NOT expose the UDP port required for parts of besu peer discovery.
 # ref: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+# Limitation: Kubernetes currently doesn't support mixed protocols (TCP and UDP) on the same port at service type LoadBalancer yet,
+# accordingly we use a different port for UDP (discovery protocol) which needs to be specified at enode urls with `discport` parameter.
+# see: https://besu.hyperledger.org/en/stable/Concepts/Node-Keys/#enode-url
 p2pLoadBalancerPort:
-  # -- Expose P2P TCP port via LoadBalancer service
+  # -- Expose P2P ports via LoadBalancer service
   enabled: false
   # -- P2P LoadBalancer service annotations (evaluated as template)
   annotations: {}
-  # -- Port to be used
-  port: 30303
+  # -- P2P TCP wire protocol port (if empty TCP port won't be exposed)
+  tcpPort: 30303
+  # -- P2P UDP discovery port (if empty UDP port won't be exposed)
+  udpPort: 30301
   # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. There are two available options: Cluster and Local (default).
   # Cluster obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.
   # Local preserves the client source IP and avoids a second hop for LoadBalancer and NodePort type Services, but risks potentially imbalanced traffic spreading.

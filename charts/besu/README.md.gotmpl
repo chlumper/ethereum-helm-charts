@@ -40,15 +40,17 @@ p2pNodePort:
   port: 31000
 ```
 
-## Exposing the P2P service (TCP only) via LoadBalancer
+## Exposing the P2P service via LoadBalancer
 
 This will make your node accessible via the Internet using a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
 When using `p2pLoadBalancerPort.enabled` the exposed IP address on your ENR record will be the "public IP" of the LoadBalancer service.
 
-**Limitations:** Limitation: We can not expose the same port with different protocols. We currently do NOT expose the UDP port required for parts of besu peer discovery.
+**Limitations:** Kubernetes currently doesn't support [mixed protocols (TCP and UDP) on the same port at service type LoadBalancer)(https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types) yet,
+ accordingly we use a different port for UDP (discovery protocol) which needs to be specified at enode urls with `discport` parameter ([see](https://besu.hyperledger.org/en/stable/Concepts/Node-Keys/#enode-url)).
 
 ```yaml
 p2pLoadBalancerPort:
   enabled: true
-  port: 30303
+  tcpPort: 30303
+  udpPort: 30301
 ```
